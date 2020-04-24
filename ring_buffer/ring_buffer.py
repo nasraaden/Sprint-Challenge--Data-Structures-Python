@@ -10,23 +10,26 @@ class RingBuffer:
     def append(self, item):
         # check to see if list is full
         size = len(self.storage)
-        self.current = self.storage.head
         if size < self.capacity:
             self.storage.add_to_tail(item)
-            size += 1
+            self.current = self.storage.tail
         elif size == self.capacity:
-            item = self.current
-            self.current += 1
+            if self.current == self.storage.tail:
+                self.current = self.storage.head
+                self.current.value = item
+            else:
+                self.current = self.current.next
+                self.current.value = item
 
     def get(self):
         # Note:  This is the only [] allowed
         list_buffer_contents = []
 
         # TODO: Your code here
-        self.current = self.storage.head
-        while self.current:
-            list_buffer_contents.append(self.current.value)
-            self.current += 1
+        node = self.storage.head
+        while node:
+            list_buffer_contents.append(node.value)
+            node = node.next
         return list_buffer_contents
 
 # ----------------Stretch Goal-------------------
